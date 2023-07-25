@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="d-flex justify-content-between">
+    Task list
+    <a href="{% url 'todolist:task-create' %}" class="btn btn-primary link-to-page ml-auto">
+      Add Task
+    </a>
+  </h1>
+
+  {% if task_list %}
+    <ul>
+      {% for task in task_list %}
+        <li>
+          <div class="d-flex justify-content-between align-items-center">
+            <h3>{{ task.content }}</h3>
+
+            {% if task.done %}
+              <div>
+                <h3 style="color: green"> Done</h3>
+                <a href="{% url 'todolist:task-complete' task.pk%}" class="btn btn-primary link-to-page">Undo</a>
+              </div>
+            {% else %}
+              <div>
+                <h3 style="color: red"> Not Done</h3>
+                <a href="{% url 'todolist:task-complete' task.pk%}" class="btn btn-danger link-to-page">Complete</a>
+              </div>
+            {% endif %}
+          </div>
+
+          <h6>Created: {{ task.datetime }}
+            {% if task.deadline %}
+              <h6 style="color: darkred">Deadline: {{ task.deadline }}</h6>
+            {% endif %}
+          </h6>
+
+          <h3 style="color: darkgrey">Tags:
+            {% for tag in task.tags.all %}
+              {{ tag.name }}
+            {% endfor %}
+            <a href="{% url 'todolist:task-update' task.pk%}">Update</a>
+            <a href="{% url 'todolist:task-delete' task.pk%}">Delete</a>
+          </h3>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>There are no tasks</p>
+  {% endif %}
+{% endblock %}
