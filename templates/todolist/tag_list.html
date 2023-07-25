@@ -1,24 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>
+  <h1 class="d-flex justify-content-between">
     Tag list
-    <a href="{% url 'todolist:tag-create' %}" class="btn btn-primary link-to-page">
-      Add Task
+    <a href="{% url 'todolist:tag-create' %}" class="btn btn-primary link-to-page ml-auto">
+      Add Tag
     </a>
   </h1>
 
   {% if tag_list %}
-    <ul>
-      <li>
+    <table class="table">
+      <tr>
+        <th>Name</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+
       {% for tag in tag_list %}
-          <h3>{{ tag.name }}</h3>
-            <a href="{% url 'todolist:tag-update' tag.pk%}">Update</a>
-            <a href="{% url 'todolist:tag-delete' tag.pk%}">Delete</a>
-        </li>
+        <tr>
+          <td>
+              {{ tag.name }}
+          </td>
+          <td>
+              <a class="btn btn-secondary" href="{% url 'todolist:tag-update' tag.pk%}">
+                Update
+              </a>
+            </td>
+            <td>
+            <a class="btn btn-secondary" href="{% url 'todolist:tag-delete' tag.pk%}">Delete</a>
+            </td>
+        </tr>
       {% endfor %}
-    </ul>
+    </table>
+
   {% else %}
-    <p>There are no tasks</p>
+      <p>There are no tags.</p>
   {% endif %}
 {% endblock %}

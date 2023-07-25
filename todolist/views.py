@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views import generic, View
 
 from .models import Tag, Task
+from .forms import TaskForm
 
 
 class TagListView(generic.ListView):
@@ -33,13 +34,13 @@ class TagDeleteView(generic.DeleteView):
 
 class TaskCreateView(generic.CreateView):
     model = Task
-    fields = "__all__"
+    form_class = TaskForm
     success_url = reverse_lazy("todolist:task-list")
 
 
 class TaskUpdateView(generic.UpdateView):
     model = Task
-    fields = "__all__"
+    form_class = TaskForm
     success_url = reverse_lazy("todolist:task-list")
 
 
@@ -52,9 +53,7 @@ class CompleteTaskView(View):
     def get(self, request, pk):
         task = get_object_or_404(Task, id=pk)
 
-        if task.done:
-            task.done = False
-        else:
-            task.done = True
+        task.done = not task.done
+        task.save()
 
         return HttpResponseRedirect(reverse_lazy("todolist:task-list"))
